@@ -1,0 +1,21 @@
+{
+    "name": "oaparecido/hermes",
+    "description": "Package to send email for the Máquina do Bem",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Daniel Aparecido",
+            "email": "daniel.aparecido4683@gmail.com"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "oaparecido\\hermes\\HermesServiceProvider"
+            ]
+        }
+    }
+}
