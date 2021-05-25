@@ -28,7 +28,6 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Oaparecido\\Courier\\": "packages/oaparecido/courier/src",
-            "Oaparecido\\Courier\\Manipulators\\": "packages/oaparecido/courier/src/manipulators",
             "Oaparecido\\Courier\\Services\\": "packages/oaparecido/courier/src/services"
         }
     },
