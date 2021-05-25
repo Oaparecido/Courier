@@ -2,7 +2,7 @@
 
 namespace Oaparecido\Courier\Services;
 
-use Oaparecido\Courier\Services\TemplateService;
+use Illuminate\Support\Facades\App;
 
 abstract class MailService
 {
@@ -31,6 +31,12 @@ abstract class MailService
     public array $translatable = [];
 
     /**
+     * fields for the translation string in file translate
+     * @var array
+     */
+    public string $translation = '';
+
+    /**
      * fields on the template that can translatable
      * @var array
      */
@@ -41,6 +47,12 @@ abstract class MailService
      * @var string
      */
     public string $html = '';
+
+    /**
+     * locale to translate
+     * @var string
+     */
+    public string $locale = '';
 
     final public function replace()
     {
@@ -64,9 +76,19 @@ abstract class MailService
 
     private function translating(): void
     {
+        App::setLocale($this->locale);
+
         foreach ($this->translatable as $key => $value) {
-            // $translated = trans();
-            $this->html = str_replace('{{' . strtoupper($key) . '}}', $value, $this->html);
+            if (is_array($value)) {
+                $attributes = $value;
+                $field = $key;
+            } else {
+                $attributes = [];
+                $field = $value;
+            }
+
+            $translated = trans('mails.' . $this->translation . '.' . $field, $attributes);
+            $this->html = str_replace('{{' . strtoupper($field) . '}}', $translated, $this->html);
         }
     }
 }

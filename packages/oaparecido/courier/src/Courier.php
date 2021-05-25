@@ -22,7 +22,7 @@ class Courier
         $mail->SMTPAuth = config('courier.smtp.auth');
         $mail->Port = config('courier.smtp.port');
         $mail->Username = config('courier.smtp.username');
-        $mail->Password = config('courier.smtp.pasword');
+        $mail->Password = config('courier.smtp.password');
         $mail->setFrom(config('courier.email_sender'), config('courier.name_sender'));
         $mail->addAddress($receiver['to_email'], $receiver['to_name']);
         $mail->Subject = $mailService->subject;
