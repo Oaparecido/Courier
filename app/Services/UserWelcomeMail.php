@@ -3,22 +3,16 @@
 
 namespace App\Services;
 
-use Oaparecido\Courier\Manipulators\MailService;
+use Oaparecido\Courier\Services\MailService;
 
 class UserWelcomeMail extends MailService
 {
+    public string $subject = 'Voce foi aprovado, parabéns!';
+
     public string $template = 'approved';
 
-    /**
-     * Construir o template no constructor do arquivo;
-     * instanciar e alterar os campos;
-     */
-
-    public function toBeSent(): array
-    {
-        return [
-            'approved',
-            'reproved'
-        ];
-    }
+    public array $translatable = [
+        'GREETING' => 'Helloooooo',
+        'CONTENT_MESSAGE' => 'O conteudo da mensagem fica aqui'
+    ];
 }

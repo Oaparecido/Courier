@@ -1,6 +1,8 @@
 <?php
 
-namespace Oaparecido\Courier\Manipulators;
+namespace Oaparecido\Courier\Services;
+
+use Oaparecido\Courier\Services\TemplateService;
 
 abstract class MailService
 {
@@ -29,8 +31,42 @@ abstract class MailService
     public array $translatable = [];
 
     /**
-     * Method from types of emails to be sent
-     * @return array
+     * fields on the template that can translatable
+     * @var array
      */
-    abstract public function toBeSent(): array;
+    public string $subject = 'subject default';
+
+    /**
+     * html to be send
+     * @var string
+     */
+    public string $html = '';
+
+    final public function replace()
+    {
+        $this->getTemplate();
+        $this->translating();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getTemplate(): void
+    {
+        $path = resource_path('mails/templates/' . $this->template . '.html');
+
+        if (file_exists($path)) {
+            $this->html = file_get_contents($path);
+        } else {
+            throw new \Exception('Courier:template-not-found', 422);
+        }
+    }
+
+    private function translating(): void
+    {
+        foreach ($this->translatable as $key => $value) {
+            // $translated = trans();
+            $this->html = str_replace('{{' . strtoupper($key) . '}}', $value, $this->html);
+        }
+    }
 }
