@@ -3,27 +3,23 @@
 
 namespace Oaparecido\Courier\Services;
 
-abstract class TemplateService
+use Illuminate\Support\Facades\App;
+use Oaparecido\Courier\Manipulators\MailService;
+
+class TemplateService
 {
-    /**
-     * 1 -> criar pacote default para envio de email.
-     *  (Criar um command para fazer a criação de templates.)
-     *  ./resources/mails/templates
-     * 2 -> passar o nome do arquivo.
-     * 3 -> verificar os campos que não são traduzíveis.
-     * 4 -> verificar os campos traduzíveis.
-     *
-     * TODO -> alterar o nome da classe;
-     */
     private array $untranslatable = [];
     private array $translatable = [];
+    private array $translateKey = '';
     private string $template = '';
     private string $html = '';
     private array $types = [];
+    private string $locale = '';
 
-    final public function replace()
+    public function replace()
     {
         $this->html = $this->getTemplate();
+        $this->translating();
     }
 
     /**
@@ -41,6 +37,16 @@ abstract class TemplateService
         }
     }
 
+    private function translating()
+    {
+        foreach ($this->translatable as $key => $value) {
+            $translated = trans();
+            $this->html = str_replace('{{' . strtoupper($key) . '}}', $value, $this->html);
+        }
+
+        dd($this->html);
+    }
+
     private function setType()
     {
         if (in_array($this->template, $this->types)) {
@@ -48,19 +54,22 @@ abstract class TemplateService
         }
     }
 
-    abstract public function init();
-
-    final protected function setTranslatables(array $translatable)
+    protected function setTranslatables(array $translatable)
     {
         $this->translatable = $translatable;
     }
 
-    final public function setTemplate(string $template)
+    public function setTemplate(string $template)
     {
         $this->template = $template;
     }
 
-    final public function getHtml(): string
+    public function setLocale(string $locale)
+    {
+        App::setLocale($locale);
+    }
+
+    public function getHtml(): string
     {
         return $this->html;
     }
