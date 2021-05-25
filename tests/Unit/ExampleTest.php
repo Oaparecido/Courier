@@ -1,15 +1,18 @@
 <?php
 
-use App\Services\MailService;
+use App\Services\UserWelcomeMail;
 use App\Services\Templates\ApprovedTemplate;
 use Oaparecido\Courier\Courier;
 
 test('Courier package init', function () {
+
     /**
-     * Passar na chmaada da função o nome do destinatário e email.
-     * passar como array ou inicializar com geters and seters;
+     * Esperar um array ou uma string
+     * se for um array faça um loop
+     * 
+     * Deixar a responsabilidade somente em uma classe para email.
      */
-    Courier::dispatcher((new MailService()), (new ApprovedTemplate()));
+    Courier::dispatcher((new UserWelcomeMail()), 'Daniel Aparecido|daniel.aparecido@gmail.com');
 
     expect([])->toBeArray();
 });
