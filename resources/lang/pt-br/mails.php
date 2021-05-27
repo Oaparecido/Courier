@@ -3,7 +3,8 @@
 return [
 
     'user-wellcome' => [
-        'greeting' => 'Olá novo mundo!',
+        'subject' => 'Aqui está o seu novo mundo!',
+        'greeting' => 'Olá :name, bem vindo ao seu novo mundo!',
         'content_message' => 'O seu novo mundo acabou de ser criado, venha fazer parte
                       dessa aventura!',
         'data' => 'Dados:<br>
@@ -11,6 +12,7 @@ return [
     ],
 
     'attributes' => [
-        'name_world'
+        'name_world',
+        'name'
     ]
 ];
