@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'locale' => env('COURIER_LOCALE', 'pt-br'),
     'host' => env('COURIER_MAILER', 'smtp.mailtrap.io'),
     'email_sender' => env('COURIER_EMAIL_SENDER', 'no-reply-to@default.com'),
     'name_sender' => env('COURIER_NAME_SENDER', 'Robot'),
