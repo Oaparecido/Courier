@@ -3,6 +3,7 @@
 namespace Oaparecido\Courier\Services;
 
 use Illuminate\Support\Facades\App;
+use Exception;
 
 abstract class MailService
 {
@@ -54,31 +55,48 @@ abstract class MailService
      */
     public string $locale = '';
 
-    final public function replace()
+    /**
+     * @var array
+     */
+    public array $payload = [];
+
+    abstract public function __construct(array $payload = []);
+
+    // mudar nome 
+    final public function start()
     {
         $this->getTemplate();
+        if (!empty($this->payload))
+            $this->translating($this->payload);
+
         $this->translating();
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getTemplate(): void
     {
+        // estudar o blade
         $path = resource_path('mails/templates/' . $this->template . '.html');
 
         if (file_exists($path)) {
             $this->html = file_get_contents($path);
         } else {
-            throw new \Exception('Courier:template-not-found', 422);
+            // se não tem HTTP então não use status code de HTTP
+            // traduzir exception (é bom?)
+            throw new Exception('Courier:template-not-found', 501);
         }
     }
 
-    private function translating(): void
+    private function translating(array $translatables = []): void
     {
-        App::setLocale($this->locale);
+        if (empty($translatables))
+            $translatables = $this->translatable;
 
-        foreach ($this->translatable as $key => $value) {
+        $this->setLocale();
+
+        foreach ($translatables as $key => $value) {
             if (is_array($value)) {
                 $attributes = $value;
                 $field = $key;
@@ -87,8 +105,17 @@ abstract class MailService
                 $field = $value;
             }
 
+            if ($field === 'subject')
+                $this->subject = trans('mails.' . $this->translation . '.' . $field, $attributes);
+
             $translated = trans('mails.' . $this->translation . '.' . $field, $attributes);
             $this->html = str_replace('{{' . strtoupper($field) . '}}', $translated, $this->html);
         }
+    }
+
+    private function setLocale()
+    {
+        $locale = (!empty($this->locale)) ? $this->locale : config('courier.locale');
+        App::setLocale($locale);
     }
 }
