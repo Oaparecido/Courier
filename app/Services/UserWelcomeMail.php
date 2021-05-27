@@ -7,19 +7,19 @@ use Oaparecido\Courier\Services\MailService;
 
 class UserWelcomeMail extends MailService
 {
-    public string $subject = 'Voce foi aprovado, parabéns!';
 
     public string $translation = 'user-wellcome';
 
     public string $template = 'approved';
 
-    public string $locale = 'pt-br';
-
     public array $translatable = [
+        'subject',
         'greeting',
-        'content_message',
-        'data' => [
-            'name_world' => 'Mundo dos dragões'
-        ]
+        'content_message'
     ];
+
+    public function __construct(array $payload = [])
+    {
+        $this->payload = $payload;
+    }
 }
