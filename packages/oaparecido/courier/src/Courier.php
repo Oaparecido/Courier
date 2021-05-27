@@ -4,17 +4,18 @@
 namespace Oaparecido\Courier;
 
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use Oaparecido\Courier\Services\MailService;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Courier
 {
-    public static function dispatcher(MailService $mailService, array|string $receiver): array
+    public static function dispatcher(MailService $mailService, array $receiver): array
     {
-        $receiver = self::transform($receiver);
+        self::validate($receiver);
+        $mailService->start();
 
-        $mailService->replace();
-
+        //implementar validação para todos os config
         $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->CharSet = 'UTF-8';
@@ -29,23 +30,20 @@ class Courier
         $mail->Body = $mailService->html;
         $mail->isHTML(true);
 
-        if (!config('courier.exceptions') && !$mail->send())
-            throw new Exception($mail->ErrorInfo, 500);
+        if (!$mail->send())
+            return ['status' => false, 'messsage' => $mail->ErrorInfo];
 
         return ['status' => true, 'message' => 'e-mail enviado com sucesso'];
     }
 
-    private static function transform(array|string $receiver): array
+    private static function validate($receiver)
     {
-        if (!is_array($receiver)) {
-            $receiver = explode('|', $receiver);
-            // TODO: Verify if $receiver[1] is e-mail 
-            $receiver = [
-                'to_name' => $receiver[0],
-                'to_email' => $receiver[1]
-            ];
-        }
+        $validator = Validator::make($receiver, [
+            'to_name' => 'required|string|min:3',
+            'to_email' => 'required|email'
+        ]);
 
-        return $receiver;
+        if ($validator->fails())
+            return ['status' => false, 'errors' => $validator->errors()];
     }
 }
