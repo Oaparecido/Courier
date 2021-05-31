@@ -13,6 +13,12 @@ return [
             'password' => env('COURIER_SMTP_PASSWORD', '986bf3e32695cd'),
             'host' => env('COURIER_MAILER', 'smtp.mailtrap.io'),
         ],
+
+        'ses' => [
+            'profile' => env('COURIER_SES_PROFILE', 'default'),
+            'version' => env('COURIER_SES_VERSION', '2010-12-01'),
+            'region' => env('AWS_SES_REGION', 'us-east-1')
+        ]
     ],
 
     'locale' => env('COURIER_LOCALE', 'pt-br'),
