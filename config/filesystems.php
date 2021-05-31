@@ -52,6 +52,11 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'mails' => [
+            'driver' => 'local',
+            'root' => resource_path('mails/templates')
+        ]
+
     ],
 
     /*
