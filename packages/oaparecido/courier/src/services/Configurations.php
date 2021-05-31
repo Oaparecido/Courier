@@ -2,11 +2,13 @@
 
 namespace Oaparecido\Courier\Services;
 
+use Aws\Ses\SesClient;
 use Illuminate\Support\Facades\Validator;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Configurations
 {
+    private static int $ses_quota = 0;
     private static array $rules = [
         'locale' => 'required|string',
         'exceptions' => 'required|boolean',
@@ -35,6 +37,15 @@ class Configurations
 
                 $toBeValidate = array_merge($toBeValidate, config('courier.mailers.smtp'));
                 break;
+            case 'ses':
+                self::$rules = array_merge(self::$rules,  [
+                    'profile' => 'required|string',
+                    'version' => 'required|string',
+                    'region' => 'required|string',
+                ]);
+
+                $toBeValidate = array_merge($toBeValidate, config('courier.mailers.ses'));
+                break;
         }
 
         $validator = Validator::make($toBeValidate, self::$rules);
@@ -45,32 +56,38 @@ class Configurations
         return $toBeValidate;
     }
 
-    public static function validateReceiver($receiver)
-    {
-        $rules = [
-            'to_name' => 'required|string|min:3',
-            'to_email' => 'required|email',
-        ];
-
-        $validator = Validator::make($receiver, self::$rules);
-
-        if ($validator->fails())
-            return ['status' => false, 'errors' => $validator->errors()];
-
-        return $receiver;
-    }
-
-    public static function chooseMailer(PHPMailer $mail)
+    public static function setMailer(PHPMailer $mail)
     {
         $configurations = Configurations::validateConfigs();
-        if (config('courier.default') === 'smtp') {
-            $mail->isSMTP();
-            $mail->Host = $configurations['host'];
-            $mail->SMTPAuth = $configurations['auth'];
-            $mail->Port = $configurations['port'];
-            $mail->Username = $configurations['username'];
-            $mail->Password = $configurations['password'];
-            $mail->setFrom($configurations['email_sender'], $configurations['name_sender']);
+        $mail->setFrom($configurations['email_sender'], $configurations['name_sender']);
+        $mail->isSMTP();
+
+        switch (config('courier.default')) {
+            case 'smtp':
+                $mail->Host = $configurations['host'];
+                $mail->SMTPAuth = $configurations['auth'];
+                $mail->Port = $configurations['port'];
+                $mail->Username = $configurations['username'];
+                $mail->Password = $configurations['password'];
+                break;
+            case 'ses':
+                $message = $mail->getSentMIMEMessage();
+
+                $object = self::getClientSES($configurations);
+                $object->sendRawEmail(['RawMessage' => ['Data' => $message]]);
+
+                $quota = $object->getSendQuota();
+                self::$ses_quota = (intval($quota->get('Max24HourSend')) - intval($quota->get('SentLast24Hours')));
+                break;
         }
+    }
+
+    private static function getClientSES($configurations)
+    {
+        return new SesClient([
+            'profile' => $configurations['profile'],
+            'version' => $configurations['version'],
+            'region' => $configurations['region'],
+        ]);
     }
 }
