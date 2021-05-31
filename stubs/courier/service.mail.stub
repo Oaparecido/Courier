@@ -1,0 +1,31 @@
+<?php
+
+namespace {{ namespace }};
+
+use Oaparecido\Courier\Services\MailService;
+
+class {{ class }} extends MailService
+{
+    /**
+     * array index in the translate file
+     * @var string 
+     */
+    public string $translation = '';
+
+    /**
+     * name for get template in files templates
+     * @var string 
+     */
+    public string $template = '{{ class }}';
+
+    /**
+     * fields that to be translate on template e-mail
+     * @var array
+     */
+    public array $translatable = [];
+
+    public function __construct(array $payload = [])
+    {
+        $this->payload = $payload;
+    }
+}

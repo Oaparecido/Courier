@@ -1,0 +1,11 @@
+<h1 style="font-family: Rubik, Roboto, Arial, sans-serif">
+    <strong>{{GREETING}}</strong>
+</h1>
+
+<p style="font-family: Rubik, Roboto, Arial, sans-serif">
+    <strong>{{CONTENT_MESSAGE}}</strong>
+</p>
+
+<p style="font-family: Rubik, Roboto, Arial, sans-serif">
+    {{DATA}}
+</p>
