@@ -29,7 +29,7 @@ return [
 
     'email_sender' => env('COURIER_EMAIL_SENDER', 'no-reply-to@default.com'),
 
-    'name_sender' => env('COURIER_NAME_SENDER', 'Robot'),
+    'name_sender' => env('COURIER_EMAIL_SENDER', 'Robot'),
 
     'exceptions' => env('COURIER_EXCEPTIONS', false),
 ];
