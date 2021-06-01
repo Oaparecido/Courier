@@ -42,6 +42,8 @@ class Configurations
                     'profile' => 'required|string',
                     'version' => 'required|string',
                     'region' => 'required|string',
+                    'config.secret' => 'required|string',
+                    'config.key' => 'required|string'
                 ]);
 
                 $toBeValidate = array_merge($toBeValidate, config('courier.mailers.ses'));
