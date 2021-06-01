@@ -16,8 +16,12 @@ return [
 
         'ses' => [
             'profile' => env('COURIER_SES_PROFILE', 'default'),
-            'version' => env('COURIER_SES_VERSION', '2010-12-01'),
-            'region' => env('AWS_SES_REGION', 'us-east-1')
+            'version' => env('COURIER_SES_VERSION', null),
+            'region' => env('AWS_SES_REGION', 'us-east-1'),
+            'config' => [
+                'secret' => env('AWS_SES_SECRET_ACCESS_KEY', null),
+                'key' => env('AWS_SES_ACCESS_KEY_ID', null)
+            ]
         ]
     ],
 
@@ -25,7 +29,7 @@ return [
 
     'email_sender' => env('COURIER_EMAIL_SENDER', 'no-reply-to@default.com'),
 
-    'name_sender' => env('COURIER_NAME_SENDER', 'Robot'),
+    'name_sender' => env('COURIER_EMAIL_SENDER', 'Robot'),
 
     'exceptions' => env('COURIER_EXCEPTIONS', false),
 ];
