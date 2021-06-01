@@ -61,6 +61,9 @@ class Configurations
     public static function setMailer(PHPMailer $mail)
     {
         $configurations = Configurations::validateConfigs();
+
+        // TODO: verify if $configurations return true or false;
+
         $mail->setFrom($configurations['email_sender'], $configurations['name_sender']);
         $mail->isSMTP();
 
