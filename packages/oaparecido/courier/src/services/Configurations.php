@@ -78,7 +78,9 @@ class Configurations
             case 'ses':
                 $message = $mail->getSentMIMEMessage();
 
-                $object = self::getClientSES($configurations);
+                $credentials = new SESCredentials();
+
+                $object = self::getClientSES($configurations, $credentials);
                 $object->sendRawEmail(['RawMessage' => ['Data' => $message]]);
 
                 $quota = $object->getSendQuota();
@@ -87,10 +89,10 @@ class Configurations
         }
     }
 
-    private static function getClientSES($configurations)
+    private static function getClientSES($configurations, $credentials)
     {
         return new SesClient([
-            'profile' => $configurations['profile'],
+            'credentials' => $credentials,
             'version' => $configurations['version'],
             'region' => $configurations['region'],
         ]);
