@@ -24,6 +24,8 @@ class CourierTemplate extends Command
 
     public function handle()
     {
+
+        //TODO: get template from file public
         $content = '<!-- ✨ WRITE YOUR HTML CODE HERE! ✨ -->' . PHP_EOL;
         $content .= '<!-- ✏️ For the translate fields use {{field_translatable_here}} -->';
 
