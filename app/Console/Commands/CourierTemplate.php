@@ -24,10 +24,7 @@ class CourierTemplate extends Command
 
     public function handle()
     {
-
-        //TODO: get template from file public
-        $content = '<!-- ✨ WRITE YOUR HTML CODE HERE! ✨ -->' . PHP_EOL;
-        $content .= '<!-- ✏️ For the translate fields use {{field_translatable_here}} -->';
+        $content = file_get_contents(resource_path('mails/templates/default.html'));
 
         Storage::disk('mails')->put($this->argument('name') . '.html', $content);
     }
