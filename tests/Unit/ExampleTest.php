@@ -1,12 +1,12 @@
 <?php
 
-use App\Services\Courier\UserValidation;
-use App\Services\UserWelcomeMail;
+use App\Services\Courier\TestDefault;
+use Illuminate\Support\Facades\Artisan;
 use Oaparecido\Courier\Courier;
 
-test('Courier package init', function () {
-
-    $service_mail = new UserValidation([]);
+test('Courier send e-mail', function () {
+    // Artisan::call('courier:init TestDefault');
+    $service_mail = new TestDefault([]);
 
     $success = Courier::dispatcher($service_mail, [
         'to_name' => 'Daniel Aparecido',
