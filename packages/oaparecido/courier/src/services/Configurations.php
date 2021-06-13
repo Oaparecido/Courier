@@ -6,6 +6,8 @@ use Aws\Ses\SesClient;
 use Illuminate\Support\Facades\Validator;
 use PHPMailer\PHPMailer\PHPMailer;
 
+use function PHPUnit\Framework\returnSelf;
+
 class Configurations
 {
     private static int $ses_quota = 0;
@@ -62,7 +64,11 @@ class Configurations
     {
         $configurations = Configurations::validateConfigs();
 
-        // TODO: verify if $configurations return true or false;
+        if (isset($configurations['status']) && !$configurations['status'])
+            return [
+                'status' => false,
+                'error' => 'courier:error-in-validate-configs'
+            ];
 
         $mail->setFrom($configurations['email_sender'], $configurations['name_sender']);
         $mail->isSMTP();

@@ -11,6 +11,12 @@ return [
                    <b>Nome do mundo:</b> :name_world'
     ],
 
+    'test-defatult' => [
+        'subject' => 'Boas vindas ao novo campeão!',
+        'greeting' => 'Olá, seja muito bem vindo',
+        'content_default' => 'Você acaba de embarcar em uma grande aventura!'
+    ],
+
     'attributes' => [
         'name_world',
         'name'
